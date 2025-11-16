@@ -22,11 +22,11 @@ class CalculatorPage extends StatelessWidget {
                     flex: 3,
                     child: Column(
                       children: [
-                        Expanded(child: _buildRow(["AC", "CE", "%"])),
-                        Expanded(child: _buildRow(["7", "8", "9"])),
-                        Expanded(child: _buildRow(["4", "5", "6"])),
-                        Expanded(child: _buildRow(["1", "2", "3"])),
-                        Expanded(child: _buildRow(["0", ".", "="])),
+                        Expanded(child: createRow(["AC", "CE", "%"])),
+                        Expanded(child: createRow(["7", "8", "9"])),
+                        Expanded(child: createRow(["4", "5", "6"])),
+                        Expanded(child: createRow(["1", "2", "3"])),
+                        Expanded(child: createRow(["0", ".", "="])),
                       ],
                     ),
                   ),
@@ -81,18 +81,12 @@ class CalculatorPage extends StatelessWidget {
     );
   }
 
-  /// Construye una fila de números o símbolos normales
-  Widget _buildRow(List<String> labels) {
+  Widget createRow(List<String> labels) {
     return Row(
       children: labels.map((label) {
         final isSpecial = ["AC", "CE"].contains(label);
-        final isOperator = ["÷", "x", "+", "-"].contains(label);
 
-        return CalculatorButton(
-          label: label,
-          isOperator: isOperator,
-          isSpecial: isSpecial,
-        );
+        return CalculatorButton(label: label, isSpecial: isSpecial);
       }).toList(),
     );
   }

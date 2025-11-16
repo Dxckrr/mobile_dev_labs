@@ -14,7 +14,12 @@ class CalculatorScreen extends StatelessWidget {
         textAlign: TextAlign.right,
         decoration: InputDecoration(
           hintText: '0',
-          border: InputBorder.none,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          filled: true,
+          fillColor: Colors.lightGreen.shade400,
           hintStyle: TextStyle(color: Colors.white),
         ),
         style: const TextStyle(
