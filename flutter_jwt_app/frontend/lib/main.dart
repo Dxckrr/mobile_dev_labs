@@ -17,10 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
-        '/login': (context) => LoginPage(),
-        'logged': (context) => const LoggedPage(),
+        '/': (context) => LoginPage(),
+        '/logged': (context) => LoggedPage(),
       },
     );
   }

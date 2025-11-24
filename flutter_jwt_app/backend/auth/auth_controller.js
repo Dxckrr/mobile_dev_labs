@@ -38,6 +38,7 @@ export const signin = async (req, res) => {
  * @returns the user session otherwise throws an error
  */
 export const profile = async (req, res) => {
+    console.log(req.user)
     const user = await getUserByEmail(req.user.email);
     if (!user) {
         console.log(user)

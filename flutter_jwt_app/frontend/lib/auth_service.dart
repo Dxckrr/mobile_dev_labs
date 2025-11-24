@@ -17,8 +17,31 @@ class AuthService {
     }
   }
 
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+  }
+
   Future<void> saveToken(String token) async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString('auth-token', token);
+  }
+
+  Future<String?> getToken() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getString('auth-token');
+  }
+
+  Future<String?> getServerValidation(String token) async {
+    final res = await http.get(
+      Uri.parse('$serverUrl/auth/validate'),
+      headers: {'Content-Type': 'application/json', 'auth-token': token},
+    );
+    if (res.statusCode == 200) {
+      print(res.body);
+      return jsonDecode(res.body)['email'];
+    } else {
+      return null;
+    }
   }
 }
