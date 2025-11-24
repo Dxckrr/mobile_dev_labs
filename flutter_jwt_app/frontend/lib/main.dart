@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/logged_page.dart';
+import 'package:frontend/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +17,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Container(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginPage(),
+        'logged': (context) => const LoggedPage(),
+      },
     );
   }
 }
