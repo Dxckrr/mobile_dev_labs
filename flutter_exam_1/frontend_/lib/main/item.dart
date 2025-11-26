@@ -33,9 +33,11 @@ class _ItemState extends State<Item> {
     return widget.isGrid
         ? Container(
             margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Colors.white,
+              border: Border.all(color: Colors.grey.shade300),
             ),
             child: Column(
               children: [
@@ -45,34 +47,68 @@ class _ItemState extends State<Item> {
                   ),
                   child: Image(
                     image: AssetImage(widget.image),
-                    width: double.infinity,
-                    height: 110,
+                    width: 300,
+                    height: 105,
                     fit: BoxFit.cover,
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  widget.name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(widget.seller),
+                        Text('${widget.rating}'),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const SizedBox(height: 50),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                          },
+                          child: Icon(
+                            isFavorite ? Icons.star : Icons.star_border,
+                            color: isFavorite ? Colors.amber : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                Text(widget.seller),
-                Text('${widget.rating}'),
               ],
             ),
           )
         : Container(
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade300),
+            ),
             child: Row(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image(
                     image: AssetImage(widget.image),
-                    width: 70,
-                    height: 70,
+                    width: 100,
+                    height: 100,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -92,6 +128,24 @@ class _ItemState extends State<Item> {
                       Text('${widget.rating}'),
                     ],
                   ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const SizedBox(height: 50),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isFavorite = !isFavorite;
+                        });
+                      },
+                      child: Icon(
+                        isFavorite ? Icons.star : Icons.star_border,
+                        color: isFavorite ? Colors.amber : Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
