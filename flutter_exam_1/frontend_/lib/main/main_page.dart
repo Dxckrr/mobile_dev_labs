@@ -49,7 +49,6 @@ class _MainPageState extends State<MainPage> {
                   icon: Icon(isGrid ? Icons.view_list : Icons.grid_view),
                   onPressed: () => setState(() => isGrid = !isGrid),
                 ),
-                IconButton(icon: const Icon(Icons.star), onPressed: () {}),
               ],
             ),
           ),

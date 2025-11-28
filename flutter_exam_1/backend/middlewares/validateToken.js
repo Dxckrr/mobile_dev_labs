@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-const TOKEN_SECRET = "1234";
+const TOKEN_SECRET = process.env.TOKEN_SECRET;
 /**
  * Validtes a jwt
  * @param req

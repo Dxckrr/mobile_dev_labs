@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import authRouter from './auth/auth_router.js';
+import itemRouter from './logic/item_router.js';
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
 const port = 3000;
 
@@ -18,6 +21,7 @@ app.use(express.json());
 
 // ROUTES
 app.use('/api/auth', authRouter);
+app.use('/api/items', itemRouter);
 
 app.listen(port, () => {
   console.log(`Server is listening on ${port}`);

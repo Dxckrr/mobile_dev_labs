@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { getUserByEmail, getUserFromDB } from './auth_service.js';
+import { getUserByEmail, getUser } from './auth_service.js';
 
-const TOKEN_SECRET = "1234"
+const TOKEN_SECRET = process.env.TOKEN_SECRET;
 /**
  * Authenticates a user by checking their email and password, and then logs them in.
  * 
@@ -13,14 +13,14 @@ export const signin = async (req, res) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
-        const user = await getUserFromDB(email, password);
+        const user = await getUser(email, password);
 
         console.log(user);
         if (!user) {
             return res.status(404).json({ success: false, message: 'Las credenciales son incorrectas.' });
         }
         const token = jwt.sign({ user: user }, TOKEN_SECRET || ' ', {
-            expiresIn: 60 * 60 * 3  //una hora
+            expiresIn: "7d"  //7 dias
         });
         res.json({token})
         // return res.status(200).header('auth-token', token).json(user);
