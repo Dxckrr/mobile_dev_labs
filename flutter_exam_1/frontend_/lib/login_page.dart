@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_/auth_service.dart';
+import 'package:frontend_/services/auth/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -20,7 +20,7 @@ class LoginPage extends StatelessWidget {
       print(result);
       if (result['token'] != 'error') {
         await _authService.saveToken(result['token']!);
-        Navigator.pushNamed(context, '/logged');
+        Navigator.pushNamed(context, '/main');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login failed. Please try again.')),

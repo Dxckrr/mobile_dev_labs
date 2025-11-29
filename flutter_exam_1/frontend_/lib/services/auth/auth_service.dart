@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:frontend_/services/db/database_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,8 +19,9 @@ class AuthService {
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.remove('auth-token');
+    await DatabaseService.instance.clearFavorites();
   }
 
   Future<void> saveToken(String token) async {

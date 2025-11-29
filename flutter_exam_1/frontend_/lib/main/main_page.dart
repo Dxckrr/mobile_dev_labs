@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_/main/item.dart';
+import 'package:frontend_/services/auth/auth_service.dart';
+import 'package:frontend_/services/db/database_service.dart';
+import 'package:frontend_/services/items/items_service.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -9,31 +12,67 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final List<Map<String, dynamic>> aItems = [
-    {
-      "image": "assets/image_1.jpg",
-      "name": "Organic Coffee",
-      "seller": "Colombia Beans",
-      "rating": 4.8,
-      "isFavorite": true,
-    },
-    {
-      "image": "assets/image_2.jpg",
-      "name": "Wireless Headphones",
-      "seller": "AudioMaster",
-      "rating": 4.5,
-      "isFavorite": false,
-    },
-    {
-      "image": "assets/image_3.jpg",
-      "name": "Smartwatch Pro",
-      "seller": "TechCorp",
-      "rating": 4.7,
-      "isFavorite": true,
-    },
-  ];
+  final _itemsService = ItemsService();
+  final _authService = AuthService();
 
   bool isGrid = false;
+
+  List<dynamic> allItems = [];
+  List<dynamic> visibleItems = [];
+
+  bool showOnlyFavorites = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getItems(context);
+    });
+  }
+
+  Future<void> _getItems(BuildContext context) async {
+    final token = await _authService.getToken();
+    if (token != null) {
+      try {
+        final apiItems = await _itemsService.fetchItems(token);
+
+        await DatabaseService.instance.syncApiFavoritesToSQLite(apiItems);
+
+        final localFavorites = await DatabaseService.instance.getFavorites();
+
+        final merged = apiItems.map((item) {
+          return {
+            ...item,
+            "is_favorite": localFavorites.contains(item['id']) ? 1 : 0,
+          };
+        }).toList();
+
+        setState(() {
+          allItems = merged;
+          visibleItems = merged;
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error fetching items: $e')));
+      }
+    }
+  }
+
+  void _refreshFavorites() async {
+    final favorites = await DatabaseService.instance.getFavorites();
+
+    setState(() {
+      for (var item in allItems) {
+        item["is_favorite"] = favorites.contains(item["id"]) ? 1 : 0;
+      }
+      if (showOnlyFavorites) {
+        visibleItems = allItems.where((i) => i["is_favorite"] == 1).toList();
+      } else {
+        visibleItems = allItems;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +88,31 @@ class _MainPageState extends State<MainPage> {
                   icon: Icon(isGrid ? Icons.view_list : Icons.grid_view),
                   onPressed: () => setState(() => isGrid = !isGrid),
                 ),
+
+                IconButton(
+                  icon: Icon(
+                    Icons.star,
+                    color: showOnlyFavorites ? Colors.amber : Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      showOnlyFavorites = !showOnlyFavorites;
+
+                      if (showOnlyFavorites) {
+                        visibleItems = allItems
+                            .where((item) => item["is_favorite"] == 1)
+                            .toList();
+                        _refreshFavorites();
+                      } else {
+                        visibleItems = allItems;
+                      }
+                    });
+                  },
+                ),
               ],
             ),
           ),
 
-          // ---- MAIN CONTENT ----
           Expanded(
             child: isGrid
                 ? GridView.builder(
@@ -61,31 +120,35 @@ class _MainPageState extends State<MainPage> {
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                         ),
-                    itemCount: aItems.length,
+                    itemCount: visibleItems.length,
                     itemBuilder: (context, index) {
-                      final item = aItems[index];
+                      final item = visibleItems[index];
                       return Item(
-                        image: item['image'],
+                        id: item['id'],
+                        image: item['img_url'],
                         name: item['name'],
                         seller: item['seller'],
                         rating: item['rating'],
-                        isFavorite: item['isFavorite'],
+                        isFavorite: item['is_favorite'] == 1,
                         isGrid: isGrid,
+                        onChanged: _refreshFavorites,
                       );
                     },
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.all(12),
-                    itemCount: aItems.length,
+                    itemCount: visibleItems.length,
                     itemBuilder: (context, index) {
-                      final item = aItems[index];
+                      final item = visibleItems[index];
                       return Item(
-                        image: item['image'],
+                        id: item['id'],
+                        image: item['img_url'],
                         name: item['name'],
                         seller: item['seller'],
                         rating: item['rating'],
-                        isFavorite: item['isFavorite'],
+                        isFavorite: item['is_favorite'] == 1,
                         isGrid: isGrid,
+                        onChanged: _refreshFavorites,
                       );
                     },
                   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_/auth_service.dart';
+import 'package:frontend_/services/auth/auth_service.dart';
 import 'package:frontend_/main/main_page.dart';
 
 class LoggedPage extends StatefulWidget {
@@ -25,7 +25,6 @@ class _LoggedPageState extends State<LoggedPage> {
               Navigator.pop(context);
             },
           ),
-          IconButton(icon: const Icon(Icons.star), onPressed: () {}),
         ],
       ),
       body: MainPage(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_/logged_page.dart';
+import 'package:frontend_/login_page.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => LoggedPage(),
+        '/': (context) => LoginPage(),
         '/main': (context) => LoggedPage(),
       },
     );

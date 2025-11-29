@@ -7,6 +7,7 @@ class ListHelper {
     for (var item in aItems) {
       items.add(
         Item(
+          id: item['id'],
           image: item['image'],
           name: item['name'],
           seller: item['seller'],
