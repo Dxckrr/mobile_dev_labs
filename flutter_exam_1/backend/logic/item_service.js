@@ -64,4 +64,27 @@ export async function getFavoritesByUser(id) {
         return null;
     }
 }
+export async function syncFavorites(userId, favorites) {
+    try {
+        const query = `DELETE FROM favorites 
+        WHERE user_id = ?`;
+        const [rows] = await connection.query(query, [userId]);
+        for (const itemId of favorites) {
+            await connection.query(
+                "INSERT INTO favorites (user_id, article_id) VALUES (?, ?)",
+                [userId, itemId]
+            );
+        }
+
+        if (rows.length > 0) {
+            return rows;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
 

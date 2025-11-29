@@ -1,3 +1,5 @@
+import 'package:frontend_/services/auth/auth_service.dart';
+import 'package:frontend_/services/items/items_service.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -31,11 +33,9 @@ class DatabaseService {
   Future<void> addFavorite(int id) async {
     final db = await database;
 
-    await db.insert(
-      'favorites',
-      {'article_id': id},
-      conflictAlgorithm: ConflictAlgorithm.ignore, 
-    );
+    await db.insert('favorites', {
+      'article_id': id,
+    }, conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
   Future<void> removeFavorite(int id) async {
@@ -65,6 +65,15 @@ class DatabaseService {
           'article_id': item['id'],
         }, conflictAlgorithm: ConflictAlgorithm.replace);
       }
+    }
+  }
+
+  Future<void> syncLocalFavoritesToSQL() async {
+    final favorites = await getFavorites();
+    final token = await AuthService().getToken();
+    
+    if (token != null) {
+      await ItemsService().syncFavoritesToBackend(token, favorites);
     }
   }
 }

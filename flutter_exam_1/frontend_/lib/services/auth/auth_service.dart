@@ -20,8 +20,11 @@ class AuthService {
 
   Future<void> logout() async {
     final preferences = await SharedPreferences.getInstance();
-    await preferences.remove('auth-token');
+    //primero sync al SQL
+    await DatabaseService.instance.syncLocalFavoritesToSQL();
+    //delete db
     await DatabaseService.instance.clearFavorites();
+    await preferences.remove('auth-token');
   }
 
   Future<void> saveToken(String token) async {

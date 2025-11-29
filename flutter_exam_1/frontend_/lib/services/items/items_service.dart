@@ -16,16 +16,15 @@ class ItemsService {
     }
   }
 
-  Future<String?> getServerValidation(String token) async {
-    final res = await http.get(
-      Uri.parse('$serverUrl/auth/validate'),
-      headers: {'Content-Type': 'application/json', 'auth-token': token},
+  Future<void> syncFavoritesToBackend(String token, List<int> favorites) async {
+    final response = await http.post(
+      Uri.parse('$serverUrl/items/sync_favorites'),
+      headers: {"Content-Type": "application/json", "auth-token": token},
+      body: jsonEncode({"favorites": favorites}),
     );
-    if (res.statusCode == 200) {
-      print(res.body);
-      return jsonDecode(res.body)['email'];
-    } else {
-      return null;
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to sync favorites: ${response.body}");
     }
   }
 }

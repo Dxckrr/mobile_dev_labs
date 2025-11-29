@@ -102,7 +102,6 @@ class _MainPageState extends State<MainPage> {
                         visibleItems = allItems
                             .where((item) => item["is_favorite"] == 1)
                             .toList();
-                        _refreshFavorites();
                       } else {
                         visibleItems = allItems;
                       }
