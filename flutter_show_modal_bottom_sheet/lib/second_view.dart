@@ -23,12 +23,14 @@ class SecondView extends StatelessWidget {
             children: colorOptions.map((item) {
               return ListTile(
                 leading: Container(
-                  width: 26,
-                  height: 26,
+                  width: 30,
+                  height: 30,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: item["color"],
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: Colors.black26),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 title: Text(item["name"]),
