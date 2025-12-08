@@ -4,16 +4,16 @@ import 'package:frontend/screens/user_expanded.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/user_item.dart';
 
-class UserList extends StatefulWidget {
-  final String? userEmail;
-  final String? token;
-  const UserList({super.key, this.userEmail, this.token});
+class UsersPage extends StatefulWidget {
+  final String userEmail;
+  final String token;
+  const UsersPage({super.key, required this.userEmail, required this.token});
 
   @override
-  State<UserList> createState() => _UserListState();
+  State<UsersPage> createState() => _UsersPageState();
 }
 
-class _UserListState extends State<UserList> {
+class _UsersPageState extends State<UsersPage> {
   final _authService = AuthService();
 
   late Future<List<User>> usersFuture;
@@ -21,8 +21,7 @@ class _UserListState extends State<UserList> {
   void initState() {
     super.initState();
     print(widget.token);
-    usersFuture = _authService.getAllUser(widget.token ?? "");
- 
+    usersFuture = _authService.getAllUser(widget.token);
   }
 
   @override
@@ -35,9 +34,6 @@ class _UserListState extends State<UserList> {
       body: FutureBuilder<List<User>>(
         future: usersFuture,
         builder: (context, snapshot) {
-          print("Snapshot data: ${snapshot.data}");
-          print("Snapshot error: ${snapshot.error}");
-
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -61,7 +57,13 @@ class _UserListState extends State<UserList> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UserExpanded(user: user,)),
+                    MaterialPageRoute(
+                      builder: (context) => UserExpanded(
+                        user: user,
+                        currentUserEmail: widget.userEmail,
+                        token: widget.token,
+                      ),
+                    ),
                   );
                 },
               );

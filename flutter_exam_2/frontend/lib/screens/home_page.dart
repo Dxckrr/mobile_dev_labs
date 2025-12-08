@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/user_list.dart';
+import 'package:frontend/screens/messages_received_page.dart';
+import 'package:frontend/screens/users_page.dart';
 import 'package:frontend/services/auth_service.dart';
 
 class HomePage extends StatefulWidget {
-  final String? userEmail;
-  final String? token;
-  const HomePage({super.key, this.userEmail, this.token});
+  final String userEmail;
+  final String token;
+  const HomePage({super.key, required this.userEmail, required this.token});
 
   @override
   State<HomePage> createState() => _LoggedPageState();
@@ -35,7 +36,7 @@ class _LoggedPageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.userEmail ?? "",
+              widget.userEmail,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
@@ -55,7 +56,15 @@ class _LoggedPageState extends State<HomePage> {
                     title: const Text('Ver mensajes'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // TODO: Navegar a mensajes
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MessagesReceivedPage(
+                            userEmail: widget.userEmail,
+                            token: widget.token,
+                          ),
+                        ),
+                      );
                     },
                   ),
                   ListTile(
@@ -66,7 +75,7 @@ class _LoggedPageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => UserList(
+                          builder: (context) => UsersPage(
                             userEmail: widget.userEmail,
                             token: widget.token,
                           ),

@@ -20,3 +20,13 @@ CREATE TABLE tokens_fcm (
     CONSTRAINT fk_token_user
         FOREIGN KEY (user_email) REFERENCES users(email)
 );
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tittle VARCHAR(150) NOT NULL,
+    body  VARCHAR(255) NOT NULL,
+    email_from VARCHAR(100) NOT NULL, 
+	email_to VARCHAR(100) NOT NULL,
+    token_device_sent VARCHAR(255) NOT NULL,
+    notification VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

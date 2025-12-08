@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/classes/user.dart';
+import 'package:frontend/widgets/message_modal.dart';
 
 class UserExpanded extends StatelessWidget {
   final User user;
+  final String currentUserEmail;
+  final String token;
 
-  const UserExpanded({super.key, required this.user});
+  const UserExpanded({
+    super.key,
+    required this.user,
+    required this.currentUserEmail,
+    required this.token,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +69,18 @@ class UserExpanded extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // Aquí luego vas a abrir pantalla para enviar mensaje
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Abrir chat o enviar mensaje"),
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (_) => MessageModal(
+                      emailFrom: currentUserEmail,
+                      emailTo: user.email,
+                      token : token
                     ),
                   );
                 },

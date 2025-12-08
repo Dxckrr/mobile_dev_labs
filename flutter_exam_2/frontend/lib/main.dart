@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/firebase_options.dart';
 import 'package:frontend/screens/home_page.dart';
 import 'package:frontend/screens/login_page.dart';
-import 'package:frontend/screens/user_list.dart';
+import 'package:frontend/screens/users_page.dart';
 import 'package:frontend/services/firebase_notification_service.dart';
 
 void main() async {
