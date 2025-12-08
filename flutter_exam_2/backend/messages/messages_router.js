@@ -3,7 +3,7 @@ import { TokenValidator } from "../middlewares/validateToken.js";
 const router = Router();
 
 router
-    .post('/send', TokenValidator, updateFavoritesC)
-    .get('/received/:user',TokenValidator,getMessagesByUser)
+    .post('/send', TokenValidator)
+    .get('/received/:user',TokenValidator)
 
 export default router;

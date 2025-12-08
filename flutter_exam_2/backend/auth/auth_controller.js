@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { getUserByEmail, getUser , createUser } from './auth_service.js';
+import { getUserByEmail, getUser , createUser, getAllUsers } from './auth_service.js';
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
@@ -54,7 +54,7 @@ export const signin = async (req, res) => {
         if (!user) {
             return res.status(404).json({ success: false, message: 'Las credenciales son incorrectas.' });
         }
-        const token = jwt.sign({ _id: user.id }, TOKEN_SECRET || ' ', {
+        const token = jwt.sign({ user: user }, TOKEN_SECRET || ' ', {
             expiresIn: "7d"  //7 dias
         });
         res.json({token})
@@ -81,4 +81,11 @@ export const profile = async (req, res) => {
     }
     res.status(200).json(user);
 };
-
+export const getAllUsersC = async (req, res) => {
+    const users = await getAllUsers(req.user.email);
+    if (!users) {
+        console.log(users)
+        return res.status(404).json({ message: 'Usuarios no encontrados.' });
+    }
+    res.status(200).json(users);
+};

@@ -1,0 +1,22 @@
+CREATE DATABASE IF NOT EXISTS Examen_2;
+USE Examen_2;
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    photo  VARCHAR(150) UNIQUE NOT NULL,
+    phone_number VARCHAR(150) UNIQUE NOT NULL, 
+	full_name VARCHAR(100) NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tokens_fcm (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_email VARCHAR(150) NOT NULL,
+    token VARCHAR(150) NOT NULL,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_token_user
+        FOREIGN KEY (user_email) REFERENCES users(email)
+);

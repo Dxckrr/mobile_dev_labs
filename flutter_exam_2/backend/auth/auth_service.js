@@ -3,14 +3,14 @@ export async function getUser(email, password,token_FCM) {
   try {
     const query = "SELECT * FROM users WHERE email = ? AND password = ?";
     const [rows] = await connection.query(query, [email, password]);
-    const [existingToken] = await db.query(
-      `SELECT * FROM tokens_fcm WHERE email = ? AND token = ?`,
+    const [existingToken] = await connection.query(
+      `SELECT * FROM tokens_fcm WHERE user_email = ? AND token = ?`,
       [email, token_FCM]
     );
 
     if (existingToken.length === 0) {
-      await db.query(
-        `INSERT INTO tokens_fcm (email, token) VALUES (?, ?)`,
+      await connection.query(
+        `INSERT INTO tokens_fcm (user_email, token) VALUES (?, ?)`,
         [email, token_FCM]
       );
     }
@@ -27,17 +27,17 @@ export async function getUser(email, password,token_FCM) {
 
 export async function createUser(user, token_FCM) {
   try {
-    const query = `INSERT INTO usuarios (email, phone, full_name, phone_number,role)
+    const query = `INSERT INTO usuarios (email, photo, full_name, phone_number,role)
              VALUES (?, ?, ?, ?, ?)`;
     const result = await connection.query(query, [
       user.email,
-      user.phone,
+      user.photo,
       user.full_name,
       user.phone_number,
       user.role,
     ]);
 
-    const query_token = `INSERT INTO tokens_fcm (email_usuario, token) VALUES (?, ?)`;
+    const query_token = `INSERT INTO tokens_fcm (user_email, token) VALUES (?, ?)`;
     const token_insert_result = await connection.query(query_token, [
       user.email,
       token_FCM,
@@ -46,7 +46,7 @@ export async function createUser(user, token_FCM) {
     const userId = result[0].insertId;
     console.log("userId", userId);
     const token = jwt.sign(
-      { _id: result[0].insertId },
+      { user: result[0] },
       process.env.TOKEN_SECRET || ""
     );
     if (!result && !token_insert_result) {
@@ -83,3 +83,15 @@ export async function getUserByEmail(email) {
     return null;
   }
 }
+export async function getAllUsers(email) {
+  try {
+    const query = "SELECT * FROM users WHERE email != ?";
+    const [rows] = await connection.query(query, [email]);
+    
+    return rows.length > 0 ? rows : [];
+  } catch (error) {
+    console.error("Error retrieving users:", error);
+    return [];
+  }
+}
+
