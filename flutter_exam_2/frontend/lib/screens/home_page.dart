@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/login_page.dart';
 import 'package:frontend/screens/messages_received_page.dart';
 import 'package:frontend/screens/users_page.dart';
 import 'package:frontend/services/auth_service.dart';
@@ -25,7 +26,10 @@ class _LoggedPageState extends State<HomePage> {
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await _authService.logout();
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
             },
           ),
         ],

@@ -1,4 +1,6 @@
 import connection from "../providers/database.js";
+import jwt from 'jsonwebtoken';
+
 export async function getUser(email, password,token_FCM) {
   try {
     const query = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -27,14 +29,15 @@ export async function getUser(email, password,token_FCM) {
 
 export async function createUser(user, token_FCM) {
   try {
-    const query = `INSERT INTO usuarios (email, photo, full_name, phone_number,role)
-             VALUES (?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO users (email, photo, full_name, phone_number,role,password)
+             VALUES (?, ?, ?, ?, ?,?)`;
     const result = await connection.query(query, [
       user.email,
       user.photo,
       user.full_name,
       user.phone_number,
       user.role,
+      user.password
     ]);
 
     const query_token = `INSERT INTO tokens_fcm (user_email, token) VALUES (?, ?)`;

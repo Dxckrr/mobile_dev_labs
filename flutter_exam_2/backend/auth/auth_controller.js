@@ -11,6 +11,7 @@ export const signup = async (req, res) => {
     const full_name = req.body.full_name;
     const phone_number = req.body.phone_number;
     const role = req.body.role;
+    const password = req.body.password
     //token
     const token_FCM = req.body.token_FCM;
 
@@ -19,7 +20,8 @@ export const signup = async (req, res) => {
         photo: photo,
         full_name: full_name,
         phone_number: phone_number,
-        role:role
+        role:role,
+        password:password
     }
 
     try {

@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_page.dart';
+import 'package:frontend/screens/register_page.dart';
 import 'package:frontend/services/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
@@ -103,6 +104,19 @@ class LoginPage extends StatelessWidget {
                   'Login',
                   style: TextStyle(color: Colors.white),
                 ),
+              ),
+              const SizedBox(height: 15),
+
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterPage(),
+                    ),
+                  );
+                },
+                child: const Text("¿No tienes cuenta? Regístrate"),
               ),
             ],
           ),

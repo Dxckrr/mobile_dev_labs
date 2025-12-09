@@ -35,6 +35,37 @@ class AuthService {
     }
   }
 
+  Future<Map<String, dynamic>> register(
+    String email,
+    String photo,
+    String fullName,
+    String phoneNumber,
+    String role,
+    String password,
+    //token
+    String tokenFCM,
+  ) async {
+    final res = await http.post(
+      Uri.parse('$serverUrl/auth/signup'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': email,
+        'photo': photo,
+        'full_name': fullName,
+        'phone_number': phoneNumber,
+        'role': role,
+        'password': password,
+        'token_FCM': tokenFCM,
+      }),
+    );
+    if (res.statusCode == 200) {
+      final token = res.headers['auth-token'] ?? '';
+      return {'token': token};
+    } else {
+      return {'token': 'error', 'status': res.statusCode, 'message': res.body};
+    }
+  }
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
